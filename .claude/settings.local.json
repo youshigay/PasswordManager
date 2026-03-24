@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude /plugin install superpowers@claude-plugins-official 2>&1 || echo \"尝试备用方式...\")",
+      "Bash(mkdir -p ~/.claude/skills/superpowers && cp -r /tmp/superpowers/skills/* ~/.claude/skills/superpowers/ && ls -la ~/.claude/skills/superpowers/)",
+      "Bash(cp -r /tmp/superpowers/hooks ~/.claude/skills/superpowers/ && cp -r /tmp/superpowers/commands ~/.claude/skills/superpowers/ && cp -r /tmp/superpowers/agents ~/.claude/skills/superpowers/)",
+      "Bash(cd \"/Users/michaels/Desktop/yoyo/work/archforce/项目/claude code/密码管理器/PasswordManager/PasswordManager\" && mkdir -p Config Models Services Views ViewModels Extensions Resources)"
+    ]
+  }
+}
