@@ -195,6 +195,9 @@
 			);
 			mainGroup = DC2736962F72795B00364B0D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DC9649E62F72817700B751D7 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DC2736A02F72795B00364B0D /* Products */;
 			projectDirPath = "";
@@ -545,6 +548,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DC9649E62F72817700B751D7 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = DC2736972F72795B00364B0D /* Project object */;
 }
