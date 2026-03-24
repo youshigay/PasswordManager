@@ -6,6 +6,38 @@
 //
 
 import SwiftUI
+import AppKit
+
+// Helper to focus first responder on macOS
+struct FirstResponder: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        // Use a longer delay to ensure the sheet window is ready
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            guard let window = view.window else { return }
+            if let contentView = window.contentView {
+                if let textField = findTextField(in: contentView) {
+                    window.makeFirstResponder(textField)
+                }
+            }
+        }
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {}
+
+    private func findTextField(in view: NSView) -> NSTextField? {
+        for subview in view.subviews {
+            if let textField = subview as? NSTextField, textField.isEditable {
+                return textField
+            }
+            if let found = findTextField(in: subview) {
+                return found
+            }
+        }
+        return nil
+    }
+}
 
 struct AddEntryView: View {
     @Environment(\.dismiss) private var dismiss
@@ -16,6 +48,7 @@ struct AddEntryView: View {
     @State private var url = ""
     @State private var notes = ""
     @State private var icon = ""
+    @State private var showPassword = false
 
     let onSave: (PasswordEntry) -> Void
 
@@ -24,15 +57,63 @@ struct AddEntryView: View {
             Text("新增密码")
                 .font(.headline)
 
-            Form {
-                TextField("名称", text: $name)
-                TextField("用户名", text: $username)
-                SecureField("密码", text: $password)
-                TextField("网址", text: $url)
-                TextField("备注", text: $notes)
-                TextField("图标 (emoji)", text: $icon)
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("名称")
+                        .frame(width: 60, alignment: .trailing)
+                    TextField("必填", text: $name)
+                        .textFieldStyle(.roundedBorder)
+                }
+
+                HStack {
+                    Text("用户名")
+                        .frame(width: 60, alignment: .trailing)
+                    TextField("必填", text: $username)
+                        .textFieldStyle(.roundedBorder)
+                }
+
+                HStack {
+                    Text("密码")
+                        .frame(width: 60, alignment: .trailing)
+                    HStack(spacing: 4) {
+                        Group {
+                            if showPassword {
+                                TextField("必填", text: $password)
+                            } else {
+                                SecureField("必填", text: $password)
+                            }
+                        }
+                        .textFieldStyle(.roundedBorder)
+
+                        Button(action: { showPassword.toggle() }) {
+                            Image(systemName: showPassword ? "eye.slash" : "eye")
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                HStack {
+                    Text("网址")
+                        .frame(width: 60, alignment: .trailing)
+                    TextField("可选", text: $url)
+                        .textFieldStyle(.roundedBorder)
+                }
+
+                HStack {
+                    Text("备注")
+                        .frame(width: 60, alignment: .trailing)
+                    TextField("可选", text: $notes)
+                        .textFieldStyle(.roundedBorder)
+                }
+
+                HStack {
+                    Text("图标")
+                        .frame(width: 60, alignment: .trailing)
+                    TextField("emoji", text: $icon)
+                        .textFieldStyle(.roundedBorder)
+                }
             }
-            .formStyle(.grouped)
 
             HStack {
                 Button("取消") { dismiss() }
@@ -57,6 +138,7 @@ struct AddEntryView: View {
             }
         }
         .padding()
-        .frame(width: 350)
+        .frame(width: 380)
+        .background(FirstResponder())
     }
 }

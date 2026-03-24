@@ -41,6 +41,9 @@ class VaultViewModel: ObservableObject {
     private var failedAttempts = 0
     private var lockoutUntil: Date?
 
+    // Debounce for search
+    private var searchDebounceTask: Task<Void, Never>?
+
     // MARK: - Computed Properties
 
     var isLocked: Bool {
@@ -156,6 +159,26 @@ class VaultViewModel: ObservableObject {
     // MARK: - Search
 
     func updateSearch() {
+        // Cancel previous debounce task
+        searchDebounceTask?.cancel()
+
+        // Create new debounce task (1 second delay)
+        searchDebounceTask = Task {
+            try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
+
+            guard !Task.isCancelled else { return }
+
+            guard let vault = vault else {
+                await MainActor.run { filteredEntries = [] }
+                return
+            }
+            let results = vault.search(searchQuery)
+            await MainActor.run { filteredEntries = results }
+        }
+    }
+
+    func searchImmediately() {
+        searchDebounceTask?.cancel()
         guard let vault = vault else {
             filteredEntries = []
             return

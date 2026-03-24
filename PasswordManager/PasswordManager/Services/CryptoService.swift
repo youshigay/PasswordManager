@@ -39,7 +39,7 @@ class CryptoService {
 
     func generateSalt() -> Data {
         var salt = Data(count: Constants.Security.saltLength)
-        _ = salt.withUnsafeMutableBytes { saltBytes in
+        salt.withUnsafeMutableBytes { saltBytes in
             guard let baseAddress = saltBytes.baseAddress else { return }
             _ = SecRandomCopyBytes(kSecRandomDefault, Constants.Security.saltLength, baseAddress)
         }

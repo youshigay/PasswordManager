@@ -16,6 +16,7 @@ struct EditEntryView: View {
     @State private var url: String
     @State private var notes: String
     @State private var icon: String
+    @State private var showPassword = false
 
     let entry: PasswordEntry
     let onSave: (PasswordEntry) -> Void
@@ -36,15 +37,57 @@ struct EditEntryView: View {
             Text("编辑密码")
                 .font(.headline)
 
-            Form {
-                TextField("名称", text: $name)
-                TextField("用户名", text: $username)
-                SecureField("密码", text: $password)
-                TextField("网址", text: $url)
-                TextField("备注", text: $notes)
-                TextField("图标 (emoji)", text: $icon)
+            VStack(alignment: .leading, spacing: 12) {
+                LabeledContent("名称") {
+                    TextField("必填", text: $name)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 220)
+                }
+
+                LabeledContent("用户名") {
+                    TextField("必填", text: $username)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 220)
+                }
+
+                LabeledContent("密码") {
+                    HStack(spacing: 4) {
+                        Group {
+                            if showPassword {
+                                TextField("必填", text: $password)
+                            } else {
+                                SecureField("必填", text: $password)
+                            }
+                        }
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 196)
+
+                        Button(action: { showPassword.toggle() }) {
+                            Image(systemName: showPassword ? "eye.slash" : "eye")
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                LabeledContent("网址") {
+                    TextField("可选", text: $url)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 220)
+                }
+
+                LabeledContent("备注") {
+                    TextField("可选", text: $notes)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 220)
+                }
+
+                LabeledContent("图标") {
+                    TextField("emoji", text: $icon)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 220)
+                }
             }
-            .formStyle(.grouped)
 
             HStack {
                 Button("取消") { dismiss() }
@@ -69,6 +112,6 @@ struct EditEntryView: View {
             }
         }
         .padding()
-        .frame(width: 350)
+        .frame(width: 380)
     }
 }

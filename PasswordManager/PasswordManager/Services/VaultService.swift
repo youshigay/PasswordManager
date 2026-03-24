@@ -103,6 +103,12 @@ class VaultService {
     func saveVault(_ vault: Vault, using dek: SymmetricKey) throws {
         let vaultURL = Constants.Storage.vaultURL
 
+        // Ensure directory exists
+        let directory = vaultURL.deletingLastPathComponent()
+        if !FileManager.default.fileExists(atPath: directory.path) {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        }
+
         // Backup existing file
         if FileManager.default.fileExists(atPath: vaultURL.path) {
             let backupURL = vaultURL.appendingPathExtension(Constants.Storage.backupFileExtension)
