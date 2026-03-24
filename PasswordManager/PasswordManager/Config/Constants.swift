@@ -20,6 +20,11 @@ enum Constants {
             try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
             return folder.appendingPathComponent(vaultFileName)
         }
+
+        static var appSupportDirectory: URL {
+            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            return appSupport.appendingPathComponent(appSupportPath)
+        }
     }
 
     // MARK: - Security
@@ -29,6 +34,7 @@ enum Constants {
         static let pbkdf2Iterations = 100_000
         static let keyLength = 32 // 256 bits
         static let saltLength = 16
+        static let ivLength = 12 // GCM standard
     }
 
     // MARK: - Authentication
