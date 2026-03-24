@@ -54,6 +54,7 @@ enum Constants {
     // MARK: - UI
     enum UI {
         static let popoverWidth: CGFloat = 360
+        static let popoverHeight: CGFloat = 500
         static let rowHeight: CGFloat = 44
         static let defaultIcon = "🔒"
     }
